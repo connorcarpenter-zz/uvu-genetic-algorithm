@@ -18,16 +18,10 @@ namespace GeneticAlgorithm
             var minLength = Math.Min(_targetString.Length, h.String.Length);
             for (var i = 0; i < minLength; i++)
             {
-                var charA = h.String[i];
-                var charB = _targetString[i];
-                var result = 100 - Math.Abs(charA - charB);
-                if (result < 0)
-                {
-                    var a = true;
-                }
-                fitness += result;
+                if(h.String[i] == _targetString[i])
+                    fitness += 5;
             }
-            fitness -= Math.Abs(_targetString.Length - h.String.Length) * 20;
+            fitness -= Math.Abs(_targetString.Length - h.String.Length);
             h.Evaluated = true;
             return fitness;
         }

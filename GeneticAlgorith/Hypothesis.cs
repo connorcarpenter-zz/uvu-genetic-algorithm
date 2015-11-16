@@ -27,7 +27,7 @@ namespace GeneticAlgorithm
         {
             var newHypotheis = new Hypothesis();
 
-            var length = Convert.ToInt32(Program.MainRandom.NextDouble() * (Math.Pow(Program.MainRandom.NextDouble() * 10, (Program.MainRandom.NextDouble() * 5))));
+            var length = Convert.ToInt32(Program.MainRandom.NextDouble() * (Math.Pow(Program.MainRandom.NextDouble() * 10, (Program.MainRandom.NextDouble() * 3))));
             newHypotheis.String = CreateRandomString(length);
             return newHypotheis;
         }

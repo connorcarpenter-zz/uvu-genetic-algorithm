@@ -10,19 +10,19 @@ namespace GeneticAlgorithm
 
         private static void Main(string[] args)
         {
-            const string targetString = "A quick brown fox.";
+            const string targetString = "A quick brown fox jumps over the lazy dog!";
             const int timesToTest = 50;
             var comparer = new HypothesisComparer();
 
             //testable variables
             const int populationSize = 12;
-            const double percentToCrossover = 0.4;
+            const double percentToCrossover = 0.3;
             const double percentToMutate = 0.3;
             const double mutationIntensity = 0.5; // 0 is no mutation, 1 is infinite mutation (don't do this) 
             const int childPerPair = 2;
             IEvaluator evaluator = new OneToOneCharEvaluator(targetString);
             ICrossoverMethod crossoverMethod = new DoubleSplitCrossoverMethod();
-            ICrossoverHandler crossoverHandler = new FitnessPercentageCrossoverHandler(crossoverMethod);
+            ICrossoverHandler crossoverHandler = new TournamentCrossoverHandler(crossoverMethod);
             ///////
 
             var tests = 0;

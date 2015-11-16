@@ -4,12 +4,90 @@ using System.Linq;
 
 namespace GeneticAlgorithm
 {
-    internal interface ICrossoverHandler
+    interface ICrossoverHandler
     {
         List<Hypothesis> CrossoverPopulation(List<Hypothesis> inputList, double crossoverRate, int childPerPair);
     }
 
-    internal class FitnessPercentageCrossoverHandler : ICrossoverHandler
+    class TournamentCrossoverHandler : ICrossoverHandler
+    {
+        private readonly ICrossoverMethod _crossoverMethod;
+
+        public TournamentCrossoverHandler(ICrossoverMethod crossoverMethod)
+        {
+            _crossoverMethod = crossoverMethod;
+        }
+
+        public List<Hypothesis> CrossoverPopulation(List<Hypothesis> population, double crossoverRate, int childPerPair)
+        {
+            var newPopulation = new List<Hypothesis>();
+            var popToCrossover = Math.Max(1, population.Count * crossoverRate);
+
+            for (var j = 0; j < popToCrossover; j++)
+            {
+                var candidateA = FindCrossOverCandidate(population);
+                var candidateB = FindCrossOverCandidate(population);
+                if (candidateA == null || candidateB == null) continue;
+                for (var i = 0; i < childPerPair; i++)
+                    newPopulation.Add(_crossoverMethod.Crossover(candidateA, candidateB));
+            }
+            return newPopulation;
+        }
+
+        private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population)
+        {
+            var candidateA = population[Program.MainRandom.Next(0, population.Count)];
+            var candidateB = population[Program.MainRandom.Next(0, population.Count)];
+            if (candidateA.Fitness < candidateB.Fitness)
+                return candidateB;
+            return candidateA;
+
+        }
+    }
+
+    class FitnessRankCrossoverHandler : ICrossoverHandler
+    {
+        private readonly ICrossoverMethod _crossoverMethod;
+
+        public FitnessRankCrossoverHandler(ICrossoverMethod crossoverMethod)
+        {
+            _crossoverMethod = crossoverMethod;
+        }
+
+        public List<Hypothesis> CrossoverPopulation(List<Hypothesis> population, double crossoverRate, int childPerPair)
+        {
+            var newPopulation = new List<Hypothesis>();
+            var popToCrossover = Math.Max(1, population.Count * crossoverRate);
+            var totalRank = population.Select((t, i) => population.Count - i).Sum();
+
+            for (var j = 0; j < popToCrossover; j++)
+            {
+                var candidateA = FindCrossOverCandidate(population, totalRank);
+                var candidateB = FindCrossOverCandidate(population, totalRank);
+                if (candidateA == null || candidateB == null) continue;
+                for (var i = 0; i < childPerPair; i++)
+                    newPopulation.Add(_crossoverMethod.Crossover(candidateA, candidateB));
+            }
+            return newPopulation;
+        }
+
+        private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population, int totalRank)
+        {
+            var index = Program.MainRandom.Next(0, Math.Max(0, totalRank - 1));
+
+            for (var i=0;i<population.Count;i++)
+            {
+                var rank = population.Count - i;
+                if (index <= rank)
+                    return population[i];
+                index -= rank;
+            }
+
+            return null;
+        }
+    }
+
+    class FitnessPercentageCrossoverHandler : ICrossoverHandler
     {
         private readonly ICrossoverMethod _crossoverMethod;
 
