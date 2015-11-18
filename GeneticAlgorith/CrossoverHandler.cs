@@ -7,17 +7,32 @@ namespace GeneticAlgorithm
     interface ICrossoverHandler
     {
         List<Hypothesis> CrossoverPopulation(List<Hypothesis> inputList, double crossoverRate, int childPerPair);
+        ICrossoverMethod CrossoverMethod { get; set; }
+    }
+
+    class AlphaBetaCrossoverHandler : ICrossoverHandler
+    {
+        public List<Hypothesis> CrossoverPopulation(List<Hypothesis> population, double crossoverRate, int childPerPair)
+        {
+            var newPopulation = new List<Hypothesis>();
+            var popToCrossover = Math.Max(1, population.Count * crossoverRate);
+
+            for (var j = 0; j < popToCrossover; j++)
+            {
+                var candidateA = population[0];
+                var candidateB = population[1];
+                if (candidateA == null || candidateB == null) continue;
+                for (var i = 0; i < childPerPair; i++)
+                    newPopulation.Add(CrossoverMethod.Crossover(candidateA, candidateB));
+            }
+            return newPopulation;
+        }
+
+        public ICrossoverMethod CrossoverMethod { get; set; }
     }
 
     class TournamentCrossoverHandler : ICrossoverHandler
     {
-        private readonly ICrossoverMethod _crossoverMethod;
-
-        public TournamentCrossoverHandler(ICrossoverMethod crossoverMethod)
-        {
-            _crossoverMethod = crossoverMethod;
-        }
-
         public List<Hypothesis> CrossoverPopulation(List<Hypothesis> population, double crossoverRate, int childPerPair)
         {
             var newPopulation = new List<Hypothesis>();
@@ -29,31 +44,25 @@ namespace GeneticAlgorithm
                 var candidateB = FindCrossOverCandidate(population);
                 if (candidateA == null || candidateB == null) continue;
                 for (var i = 0; i < childPerPair; i++)
-                    newPopulation.Add(_crossoverMethod.Crossover(candidateA, candidateB));
+                    newPopulation.Add(CrossoverMethod.Crossover(candidateA, candidateB));
             }
             return newPopulation;
         }
 
+        public ICrossoverMethod CrossoverMethod { get; set; }
+
         private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population)
         {
-            var candidateA = population[Program.MainRandom.Next(0, population.Count)];
-            var candidateB = population[Program.MainRandom.Next(0, population.Count)];
+            var candidateA = population[ExperimentSet.MainRandom.Next(0, population.Count)];
+            var candidateB = population[ExperimentSet.MainRandom.Next(0, population.Count)];
             if (candidateA.Fitness < candidateB.Fitness)
                 return candidateB;
             return candidateA;
-
         }
     }
 
     class FitnessRankCrossoverHandler : ICrossoverHandler
     {
-        private readonly ICrossoverMethod _crossoverMethod;
-
-        public FitnessRankCrossoverHandler(ICrossoverMethod crossoverMethod)
-        {
-            _crossoverMethod = crossoverMethod;
-        }
-
         public List<Hypothesis> CrossoverPopulation(List<Hypothesis> population, double crossoverRate, int childPerPair)
         {
             var newPopulation = new List<Hypothesis>();
@@ -66,14 +75,16 @@ namespace GeneticAlgorithm
                 var candidateB = FindCrossOverCandidate(population, totalRank);
                 if (candidateA == null || candidateB == null) continue;
                 for (var i = 0; i < childPerPair; i++)
-                    newPopulation.Add(_crossoverMethod.Crossover(candidateA, candidateB));
+                    newPopulation.Add(CrossoverMethod.Crossover(candidateA, candidateB));
             }
             return newPopulation;
         }
 
+        public ICrossoverMethod CrossoverMethod { get; set; }
+
         private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population, int totalRank)
         {
-            var index = Program.MainRandom.Next(0, Math.Max(0, totalRank - 1));
+            var index = ExperimentSet.MainRandom.Next(0, Math.Max(0, totalRank - 1));
 
             for (var i=0;i<population.Count;i++)
             {
@@ -89,13 +100,6 @@ namespace GeneticAlgorithm
 
     class FitnessPercentageCrossoverHandler : ICrossoverHandler
     {
-        private readonly ICrossoverMethod _crossoverMethod;
-
-        public FitnessPercentageCrossoverHandler(ICrossoverMethod crossoverMethod)
-        {
-            _crossoverMethod = crossoverMethod;
-        }
-
         public List<Hypothesis> CrossoverPopulation(List<Hypothesis> population, double crossoverRate, int childPerPair)
         {
             var newPopulation = new List<Hypothesis>();
@@ -113,15 +117,17 @@ namespace GeneticAlgorithm
                 if (candidateA != null && candidateB != null)
                 {
                     for (var i = 0; i < childPerPair; i++)
-                        newPopulation.Add(_crossoverMethod.Crossover(candidateA, candidateB));
+                        newPopulation.Add(CrossoverMethod.Crossover(candidateA, candidateB));
                 }
             }
             return newPopulation;
         }
 
+        public ICrossoverMethod CrossoverMethod { get; set; }
+
         private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population, int totalFitness, int minFitness)
         {
-            var index = Program.MainRandom.Next(0, Math.Max(0, totalFitness - 1));
+            var index = ExperimentSet.MainRandom.Next(0, Math.Max(0, totalFitness - 1));
 
             foreach (var h in population)
             {

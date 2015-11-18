@@ -7,8 +7,8 @@
     <ProjectGuid>{7FB203F3-21B9-448F-859E-114053DC48F3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeneticAlgorith</RootNamespace>
-    <AssemblyName>GeneticAlgorith</AssemblyName>
+    <RootNamespace>GeneticAlgorithm</RootNamespace>
+    <AssemblyName>GeneticAlgorithm</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

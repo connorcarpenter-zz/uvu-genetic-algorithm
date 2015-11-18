@@ -2,40 +2,64 @@
 
 namespace GeneticAlgorithm
 {
-    internal class OneToOneCharEvaluator : IEvaluator
+    class OccurenceEvaluator : IEvaluator
     {
-        private readonly string _targetString;
-
-        public OneToOneCharEvaluator(string target)
-        {
-            _targetString = target;
-        }
-
         public int EvaluateHypothesis(Hypothesis h)
         {
             if (h.Evaluated) return h.Fitness;
             var fitness = 0;
-            var minLength = Math.Min(_targetString.Length, h.String.Length);
+            var minLength = Math.Min(TargetString.Length, h.String.Length);
             for (var i = 0; i < minLength; i++)
             {
-                if(h.String[i] == _targetString[i])
-                    fitness += 5;
+                if (h.String[i] == TargetString[i])
+                {
+                    fitness += 20;
+                }
+                else
+                {
+                    for (var j = 1; j < 3; j++)
+                    {
+                        if (h.String[Math.Min(h.String.Length-1, i + j)] == TargetString[i])
+                        {
+                            fitness += 10 - j;
+                            break;
+                        }
+                        if (h.String[Math.Max(0, i - j)] != TargetString[i]) continue;
+                        fitness += 10 - j;
+                        break;
+                    }
+                }
             }
-            fitness -= Math.Abs(_targetString.Length - h.String.Length);
+            fitness -= Math.Abs(TargetString.Length - h.String.Length)*2;
             h.Evaluated = true;
             return fitness;
         }
+
+        public string TargetString { get; set; }
     }
 
-    internal class ScanDistanceEvaluator : IEvaluator
+    class OneToOneCharEvaluator : IEvaluator
     {
-        private readonly string _targetString;
-
-        public ScanDistanceEvaluator(string target)
+        public int EvaluateHypothesis(Hypothesis h)
         {
-            _targetString = target;
+            if (h.Evaluated) return h.Fitness;
+            var fitness = 0;
+            var minLength = Math.Min(TargetString.Length, h.String.Length);
+            for (var i = 0; i < minLength; i++)
+            {
+                if(h.String[i] == TargetString[i])
+                    fitness += 5;
+            }
+            fitness -= Math.Abs(TargetString.Length - h.String.Length);
+            h.Evaluated = true;
+            return fitness;
         }
 
+        public string TargetString { get; set; }
+    }
+
+    class ScanDistanceEvaluator : IEvaluator
+    {
         public int EvaluateHypothesis(Hypothesis h)
         {
             if (h.Evaluated) return h.Fitness;
@@ -44,7 +68,7 @@ namespace GeneticAlgorithm
             var endScan = false;
             if (h.String.Length > 0)
             {
-                foreach (var charToFind in _targetString)
+                foreach (var charToFind in TargetString)
                 {
                     while (h.String[hIndex] != charToFind)
                     {
@@ -56,20 +80,20 @@ namespace GeneticAlgorithm
                     }
                     if (endScan)
                         break;
-                    fitness += 100;
+                    fitness += 20;
                 }
             }
-            if (h.String.Length < _targetString.Length)
-            {
-                fitness -= (_targetString.Length - h.String.Length) * 10;
-            }
+            fitness -= Math.Abs(TargetString.Length - h.String.Length);
             h.Evaluated = true;
             return fitness;
         }
+
+        public string TargetString { get; set; }
     }
 
     internal interface IEvaluator
     {
         int EvaluateHypothesis(Hypothesis h);
+        string TargetString { get; set; }
     }
 }

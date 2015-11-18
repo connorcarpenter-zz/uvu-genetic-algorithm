@@ -27,7 +27,7 @@ namespace GeneticAlgorithm
         {
             var newHypotheis = new Hypothesis();
 
-            var length = Convert.ToInt32(Program.MainRandom.NextDouble() * (Math.Pow(Program.MainRandom.NextDouble() * 10, (Program.MainRandom.NextDouble() * 3))));
+            var length = Convert.ToInt32(ExperimentSet.MainRandom.NextDouble() * (Math.Pow(ExperimentSet.MainRandom.NextDouble() * 10, (ExperimentSet.MainRandom.NextDouble() * 3))));
             newHypotheis.String = CreateRandomString(length);
             return newHypotheis;
         }
@@ -46,10 +46,10 @@ namespace GeneticAlgorithm
         {
             var newHypothesis = new Hypothesis();
             var newString = new string(parent.String.ToCharArray());
-            while (Program.MainRandom.NextDouble() > mutationIntensity)
+            while (ExperimentSet.MainRandom.NextDouble() > mutationIntensity)
             {
-                var index = Program.MainRandom.Next(0, newString.Length);
-                var type = Program.MainRandom.Next(0, 3);
+                var index = ExperimentSet.MainRandom.Next(0, newString.Length);
+                var type = ExperimentSet.MainRandom.Next(0, 3);
 
                 if (type != 0 && newString.Length > 0)
                     newString = newString.Remove(index, 1);
@@ -62,7 +62,7 @@ namespace GeneticAlgorithm
 
         public static string GetRandomChar()
         {
-            return "" + Convert.ToChar(Program.MainRandom.Next(32, 127));
+            return "" + Convert.ToChar(ExperimentSet.MainRandom.Next(32, 127));
         }
     }
 }
