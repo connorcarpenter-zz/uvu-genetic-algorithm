@@ -12,12 +12,12 @@ namespace GeneticAlgorithm
 
         private static void Main(string[] args)
         {
-            var ExperimentSets = InitExperimentSets();
+            var experimentSets = InitExperimentSets();
 
             while (true)
             {
                 var allDone = true;
-                foreach (var experimentSet in ExperimentSets)
+                foreach (var experimentSet in experimentSets)
                 {
                     experimentSet.RunExperiment();
                     if (!experimentSet.Done)
@@ -33,7 +33,7 @@ namespace GeneticAlgorithm
             var experimentSets = new List<ExperimentSet>();
 
             //Population Size
-            var newSet = new ExperimentSet();
+            var newSet = new ExperimentSet {FileName = "C:/Repos/CS4470/GeneticAlgorithm/results/popsize.csv"};
             experimentSets.Add(newSet);
 
             AddPopulationSizeExperiment(newSet, 10);
@@ -48,7 +48,7 @@ namespace GeneticAlgorithm
             AddPopulationSizeExperiment(newSet, 100);
 
             //Crossover Percent
-            newSet = new ExperimentSet();
+            newSet = new ExperimentSet {FileName = "C:/Repos/CS4470/GeneticAlgorithm/results/crossoverpercent.csv"};
             experimentSets.Add(newSet);
 
             AddCrossoverPercentExperiment(newSet, 0.1);
@@ -62,7 +62,7 @@ namespace GeneticAlgorithm
             AddCrossoverPercentExperiment(newSet, 0.9);
 
             //Mutation Percent
-            newSet = new ExperimentSet();
+            newSet = new ExperimentSet {FileName = "C:/Repos/CS4470/GeneticAlgorithm/results/mutationpercent.csv"};
             experimentSets.Add(newSet);
 
             AddMutationPercentExperiment(newSet, 0.1);
@@ -76,7 +76,7 @@ namespace GeneticAlgorithm
             AddMutationPercentExperiment(newSet, 0.9);
 
             //Crossover Method
-            newSet = new ExperimentSet();
+            newSet = new ExperimentSet {FileName = "C:/Repos/CS4470/GeneticAlgorithm/results/crossovermethod.csv"};
             experimentSets.Add(newSet);
 
             AddCrossoverMethodExperiment(newSet, new UniformCrossoverMethod(), "Uniform");
@@ -84,7 +84,7 @@ namespace GeneticAlgorithm
             AddCrossoverMethodExperiment(newSet, new DoubleSplitCrossoverMethod(), "Double Split");
 
             //Crossover Handler
-            newSet = new ExperimentSet();
+            newSet = new ExperimentSet {FileName = "C:/Repos/CS4470/GeneticAlgorithm/results/selectionmethod.csv"};
             experimentSets.Add(newSet);
 
             AddCrossoverHandlerExperiment(newSet, new AlphaBetaCrossoverHandler(), "Alpha-Beta");
@@ -151,7 +151,7 @@ namespace GeneticAlgorithm
             get { return _evaluator; }
             set
             {
-                var tempString = _evaluator.TargetString;
+                var tempString = (_evaluator != null) ? _evaluator.TargetString : "";
                 _evaluator = value;
                 _evaluator.TargetString = tempString;
             }
@@ -162,7 +162,7 @@ namespace GeneticAlgorithm
             get { return _crossoverHandler; }
             set
             {
-                var tempMethod = _crossoverHandler.CrossoverMethod;
+                var tempMethod = (_crossoverHandler!=null) ? _crossoverHandler.CrossoverMethod : null;
                 _crossoverHandler = value;
                 _crossoverHandler.CrossoverMethod = tempMethod;
             }
@@ -206,6 +206,7 @@ namespace GeneticAlgorithm
             Experiments.RemoveAt(0);
             var result = ExecuteExperiment(nextExperiment);
             Results.Add(nextExperiment.Label + "," + result);
+            Console.WriteLine(nextExperiment.Label + ", found in " + result + " ms");
 
             if (Experiments.Count == 0)
             {
@@ -217,7 +218,7 @@ namespace GeneticAlgorithm
         private static int ExecuteExperiment(Experiment experiment)
         {
             //returns milliseconds to get target string
-            const int timesToTest = 50;
+            const int timesToTest = 20;
 
             var tests = 0;
             //var generationTotal = 0;

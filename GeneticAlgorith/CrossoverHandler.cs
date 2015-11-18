@@ -53,8 +53,8 @@ namespace GeneticAlgorithm
 
         private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population)
         {
-            var candidateA = population[ExperimentSet.MainRandom.Next(0, population.Count)];
-            var candidateB = population[ExperimentSet.MainRandom.Next(0, population.Count)];
+            var candidateA = population[Program.MainRandom.Next(0, population.Count)];
+            var candidateB = population[Program.MainRandom.Next(0, population.Count)];
             if (candidateA.Fitness < candidateB.Fitness)
                 return candidateB;
             return candidateA;
@@ -84,7 +84,7 @@ namespace GeneticAlgorithm
 
         private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population, int totalRank)
         {
-            var index = ExperimentSet.MainRandom.Next(0, Math.Max(0, totalRank - 1));
+            var index = Program.MainRandom.Next(0, Math.Max(0, totalRank - 1));
 
             for (var i=0;i<population.Count;i++)
             {
@@ -127,7 +127,7 @@ namespace GeneticAlgorithm
 
         private static Hypothesis FindCrossOverCandidate(List<Hypothesis> population, int totalFitness, int minFitness)
         {
-            var index = ExperimentSet.MainRandom.Next(0, Math.Max(0, totalFitness - 1));
+            var index = Program.MainRandom.Next(0, Math.Max(0, totalFitness - 1));
 
             foreach (var h in population)
             {

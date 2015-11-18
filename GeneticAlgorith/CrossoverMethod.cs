@@ -17,13 +17,13 @@ namespace GeneticAlgorithm
             {
                 return hypothesisA.String.Length > hypothesisB.String.Length ? hypothesisA : hypothesisB;
             }
-            var indexA = ExperimentSet.MainRandom.Next(0, minLength);
-            var indexB = ExperimentSet.MainRandom.Next(0, minLength);
+            var indexA = Program.MainRandom.Next(0, minLength);
+            var indexB = Program.MainRandom.Next(0, minLength);
             var minIndex = Math.Min(indexA, indexB);
             var maxIndex = Math.Max(indexA, indexB);
             Hypothesis hypA;
             Hypothesis hypB;
-            if (ExperimentSet.MainRandom.NextDouble() > 0.5)
+            if (Program.MainRandom.NextDouble() > 0.5)
             {
                 hypA = hypothesisA;
                 hypB = hypothesisB;
@@ -52,10 +52,10 @@ namespace GeneticAlgorithm
             {
                 return hypothesisA.String.Length > hypothesisB.String.Length ? hypothesisA : hypothesisB;
             }
-            var index = ExperimentSet.MainRandom.Next(0, minLength);
+            var index = Program.MainRandom.Next(0, minLength);
             Hypothesis hypA;
             Hypothesis hypB;
-            if (ExperimentSet.MainRandom.NextDouble() > 0.5)
+            if (Program.MainRandom.NextDouble() > 0.5)
             {
                 hypA = hypothesisA;
                 hypB = hypothesisB;
@@ -93,7 +93,7 @@ namespace GeneticAlgorithm
                     sb.Append("" + hypothesisA.String[i]);
                     continue;
                 }
-                if (ExperimentSet.MainRandom.NextDouble() > 0.5)
+                if (Program.MainRandom.NextDouble() > 0.5)
                 {
                     sb.Append("" + hypothesisA.String[i]);
                 }
